@@ -1,0 +1,10 @@
+data:
+  raw_path: data/raw/
+  processed_path: data/processed/
+
+model:
+  horizon_days: 14
+  type: gradient_boosting
+
+database:
+  connection_string: sqlite:///forecast.db
