@@ -20,7 +20,11 @@ df = df.sort_values("date")
 Seleziono le features
 """
 Target = "sales"
-Features = ["lag_1", "lag_7", "rolling_mean_7", "day_of_week", "month"]
+Features = [
+    "lag_1", "lag_7", "lag_14", "lag_28",
+    "rolling_mean_7", "rolling_mean_14",
+    "dow_sin", "dow_cos", "month_sin", "month_cos"
+]
 
 df_model = df.dropna(subset=Features + [Target])
 X = df_model[Features]

@@ -21,6 +21,13 @@ def rolling_forecast(df: pd.DataFrame, window: int = 7) -> pd.DataFrame:
     )
     return df
 
+def get_test_mask(df: pd.DataFrame, split_quantile=0.8):
+    """
+    Restituisce il mask booleano per il test set basato su quantile temporale
+    """
+    split_date = df["date"].quantile(split_quantile)
+    return df["date"] > split_date
+
 def evaluate(df: pd.DataFrame, y_col="sales", y_pred_col="y_pred_naive"):
     """
     Prendo solo le righe in cui la predizione non è Nan
@@ -44,11 +51,16 @@ if __name__ == "__main__":
 
     # Baseline naive
     df = naive_forecast(df)
-    evaluate(df, y_pred_col="y_pred_naive")
 
     # Baseline rolling
     df = rolling_forecast(df, window=7)
-    evaluate(df, y_pred_col="y_pred_roll_7")
+    
+    #Maschera test set
+    mask_test = get_test_mask(df)
+
+    #Valutazione su test set
+    evaluate(df.loc[mask_test], y_pred_col="y_pred_naive")
+    evaluate(df.loc[mask_test], y_pred_col="y_pred_roll_7")
 
     # Salva previsioni
     output_path = Path("data/models/")

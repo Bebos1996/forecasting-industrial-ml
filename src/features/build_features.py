@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from pathlib import Path
 
 def add_time_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -6,7 +7,13 @@ def add_time_features(df: pd.DataFrame) -> pd.DataFrame:
     Aggiungo colonne temporali dal campo 'date'
     """
     df["day_of_week"] = df["date"].dt.weekday
+    df['dow_sin'] = np.sin(2 * np.pi * df['day_of_week']/7)
+    df['dow_cos'] = np.cos(2 * np.pi * df['day_of_week']/7)
+
     df["month"] = df["date"].dt.month
+    df['month_sin'] = np.sin(2 * np.pi * df['month']/12)
+    df['month_cos'] = np.cos(2 * np.pi * df['month']/12)
+
     df["quarter"] = df["date"].dt.quarter
     df["day"] = df["date"].dt.day
     df["year"] = df["date"].dt.year
@@ -49,7 +56,7 @@ if __name__ == "__main__":
 
     # Feature engineering
     df = add_time_features(df)
-    df = add_lag_features(df, lags=[1,7])
+    df = add_lag_features(df, lags=[1,7, 14, 28])
     df = add_rolling_features(df, windows=[7,14])
 
     # Save
