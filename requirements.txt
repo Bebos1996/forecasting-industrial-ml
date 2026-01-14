@@ -4,3 +4,5 @@ scikit-learn
 statsmodels
 pyyaml
 sqlalchemy
+matplotlib
+lightgbm
